@@ -1,6 +1,6 @@
 # Test Coverage Annotations - Github Action
 
-A github action that add test coverage annotations to your files using an (istanbul-style coverage json file)[https://github.com/gotwarlost/istanbul/blob/master/coverage.json.md] (jest compatible).
+A github action that add test coverage annotations to your files using an [istanbul-style coverage json file](https://github.com/gotwarlost/istanbul/blob/master/coverage.json.md) (jest compatible).
 
 This requires the following permission:
 
