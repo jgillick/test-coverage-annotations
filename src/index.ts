@@ -18,7 +18,6 @@ function loadInputs(): Inputs {
     accessToken: core.getInput("access-token"),
     coverageFile: core.getInput("coverage"),
     coverageCwd: core.getInput("coverage-working-directory") || pwd,
-    commitSha: core.getInput("commit-sha") || github.context.sha,
     onlyChangedFiles:
       core.getInput("only-changed-files").toLowerCase() === "true",
   };
@@ -74,9 +73,9 @@ function readCoverageFile(filepath: string): Coverage {
  */
 async function saveAnnotations(annotations: Annotation[], accessToken: string) {
   const client = github.getOctokit(accessToken);
+  const sha =
+    github.context.payload.pull_request?.head?.sha || github.context.sha;
   const total = annotations.length;
-
-  console.log("Context", github.context.payload.pull_request);
 
   console.log("Annotations:", total);
   const output = {
@@ -89,16 +88,13 @@ async function saveAnnotations(annotations: Annotation[], accessToken: string) {
   while (annotations.length) {
     const batch = annotations.splice(0, ANNOTATION_BATCH);
 
-    console.log("Batch");
-    console.log(batch);
-
     // Create check
     if (!checkId) {
-      console.log("Create check run");
+      console.log(`Create check run for ${sha}`);
       const res = await client.rest.checks.create({
         owner: github.context.repo.owner,
         repo: github.context.repo.repo,
-        head_sha: github.context.sha,
+        head_sha: sha,
         name: "Test Coverage Annotations",
         output: {
           ...output,

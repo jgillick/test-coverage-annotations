@@ -9555,7 +9555,6 @@ function loadInputs() {
         accessToken: core.getInput("access-token"),
         coverageFile: core.getInput("coverage"),
         coverageCwd: core.getInput("coverage-working-directory") || pwd,
-        commitSha: core.getInput("commit-sha") || github.context.sha,
         onlyChangedFiles: core.getInput("only-changed-files").toLowerCase() === "true",
     };
 }
@@ -9600,9 +9599,10 @@ function readCoverageFile(filepath) {
  * Save annotations to PR check
  */
 async function saveAnnotations(annotations, accessToken) {
+    var _a, _b;
     const client = github.getOctokit(accessToken);
+    const sha = ((_b = (_a = github.context.payload.pull_request) === null || _a === void 0 ? void 0 : _a.head) === null || _b === void 0 ? void 0 : _b.sha) || github.context.sha;
     const total = annotations.length;
-    console.log("Context", github.context.payload.pull_request);
     console.log("Annotations:", total);
     const output = {
         title: "Test Coverage",
@@ -9612,15 +9612,13 @@ async function saveAnnotations(annotations, accessToken) {
     let checkId;
     while (annotations.length) {
         const batch = annotations.splice(0, ANNOTATION_BATCH);
-        console.log("Batch");
-        console.log(batch);
         // Create check
         if (!checkId) {
-            console.log("Create check run");
+            console.log(`Create check run for ${sha}`);
             const res = await client.rest.checks.create({
                 owner: github.context.repo.owner,
                 repo: github.context.repo.repo,
-                head_sha: github.context.sha,
+                head_sha: sha,
                 name: "Test Coverage Annotations",
                 output: Object.assign(Object.assign({}, output), { annotations: batch }),
             });
