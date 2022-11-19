@@ -93,6 +93,9 @@ async function main() {
       files = Object.keys(coverage);
     }
 
+    console.log("Coverage for files");
+    console.log(files);
+
     // Get annotations
     const annotations = parseCoverage(coverage, files, pwd);
     console.log("Annotations", annotations.length);
