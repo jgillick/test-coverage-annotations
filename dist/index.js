@@ -9636,6 +9636,8 @@ async function main() {
         console.log("Annotations", annotations.length);
         // Save annotations
         await saveAnnotations(annotations, inputs.accessToken);
+        // Debug
+        core.setFailed("Testing");
     }
     catch (error) {
         core.setFailed(error);

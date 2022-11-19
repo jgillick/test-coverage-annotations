@@ -113,6 +113,9 @@ async function main() {
 
     // Save annotations
     await saveAnnotations(annotations, inputs.accessToken);
+
+    // Debug
+    core.setFailed("Testing");
   } catch (error) {
     core.setFailed(error as Error);
   }
