@@ -9578,7 +9578,13 @@ async function getChangedFiles(accessToken, pwd) {
  * Read coverage file
  */
 function readCoverageFile(filepath) {
-    return JSON.parse(fs_1.default.readFileSync(filepath).toString());
+    console.log(`Reading coverage file: ${filepath}`);
+    try {
+        return JSON.parse(fs_1.default.readFileSync(filepath).toString());
+    }
+    catch (error) {
+        throw new Error(`Could not load coverage file: ${String(error)}`);
+    }
 }
 /**
  * Save annotations to PR check
@@ -9617,6 +9623,8 @@ async function main() {
         else {
             files = Object.keys(coverage);
         }
+        console.log("Coverage for files");
+        console.log(files);
         // Get annotations
         const annotations = (0, parseCoverage_1.parseCoverage)(coverage, files, pwd);
         console.log("Annotations", annotations.length);
@@ -9645,7 +9653,12 @@ exports.parseCoverage = void 0;
 function parseCoverage(coverage, files, filePrefix = "") {
     const annotations = [];
     for (let filename of files) {
+        console.log(filename);
         const fileCoverage = coverage[filename];
+        if (!fileCoverage) {
+            console.warn(`No file coverage for ${filename}`);
+        }
+        console.log(Object.keys(fileCoverage));
         let path = filename;
         if (filePrefix.length && path.startsWith(filePrefix)) {
             path = path.substring(filePrefix.length);
