@@ -11,7 +11,9 @@ export function parseCoverage(
   const annotations = [];
 
   for (let filename of files) {
+    console.log(filename);
     const fileCoverage = coverage[filename];
+    console.log(Object.keys(fileCoverage));
 
     let path = filename;
     if (filePrefix.length && path.startsWith(filePrefix)) {
