@@ -9689,10 +9689,17 @@ function parseCoverage(coverage, files, filePrefix = "") {
         if (annotation.end_column === null) {
             delete annotation.end_column;
         }
-        // Remove end column if start_line and end_line are not the same
-        if (typeof annotation.end_column === "number" &&
-            annotation.start_line !== annotation.end_line) {
-            delete annotation.end_column;
+        if (annotation.start_column === null) {
+            delete annotation.start_column;
+        }
+        // Remove column values if start/end lines are not the same
+        if (annotation.start_line !== annotation.end_line) {
+            if (typeof annotation.end_column !== "undefined") {
+                delete annotation.end_column;
+            }
+            if (typeof annotation.start_column !== "undefined") {
+                delete annotation.start_column;
+            }
         }
         annotations.push(annotation);
     };
@@ -9703,6 +9710,7 @@ function parseCoverage(coverage, files, filePrefix = "") {
             continue;
         }
         const fileCoverage = coverage[filepath];
+        console.warn(`Checking coverage for ${filepath}`);
         // Strip path prefix off filepath for annotation
         let annotationPath = filepath;
         if (filePrefix.length) {

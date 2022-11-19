@@ -11,7 +11,7 @@ export type Annotation = {
   annotation_level: string;
   start_line: number;
   end_line: number;
-  start_column: number;
+  start_column?: number;
   end_column?: number;
 };
 
