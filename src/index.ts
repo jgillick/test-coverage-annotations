@@ -81,7 +81,7 @@ async function saveAnnotations(annotations: Annotation[], accessToken: string) {
     output: {
       title: "Test Coverage",
       summary: `Found ${annotations.length} areas of code missing test coverage. View files for annotations`,
-      annotations: annotations,
+      annotations,
     },
   });
 }
@@ -99,7 +99,7 @@ async function main() {
     // Get files to annotate
     let files: string[];
     if (inputs.onlyChangedFiles) {
-      files = await getChangedFiles(inputs.accessToken);
+      files = await getChangedFiles(inputs.accessToken, inputs.coverageCwd);
     } else {
       files = Object.keys(coverage);
     }
@@ -109,7 +109,7 @@ async function main() {
 
     // Get annotations
     const annotations = parseCoverage(coverage, files, inputs.coverageCwd);
-    console.log("Annotations", annotations.length);
+    console.log("Annotations:", annotations.length);
 
     // Save annotations
     await saveAnnotations(annotations, inputs.accessToken);

@@ -9609,7 +9609,7 @@ async function saveAnnotations(annotations, accessToken) {
         output: {
             title: "Test Coverage",
             summary: `Found ${annotations.length} areas of code missing test coverage. View files for annotations`,
-            annotations: annotations,
+            annotations,
         },
     });
 }
@@ -9624,7 +9624,7 @@ async function main() {
         // Get files to annotate
         let files;
         if (inputs.onlyChangedFiles) {
-            files = await getChangedFiles(inputs.accessToken);
+            files = await getChangedFiles(inputs.accessToken, inputs.coverageCwd);
         }
         else {
             files = Object.keys(coverage);
@@ -9633,7 +9633,7 @@ async function main() {
         console.log(files);
         // Get annotations
         const annotations = (0, parseCoverage_1.parseCoverage)(coverage, files, inputs.coverageCwd);
-        console.log("Annotations", annotations.length);
+        console.log("Annotations:", annotations.length);
         // Save annotations
         await saveAnnotations(annotations, inputs.accessToken);
         // Debug
@@ -9671,7 +9671,12 @@ function parseCoverage(coverage, files, filePrefix = "") {
         // Strip path prefix off filepath for annotation
         let annotationPath = filepath;
         if (filePrefix.length) {
-            annotationPath = annotationPath.substring(filePrefix.length);
+            if (annotationPath.startsWith(filePrefix)) {
+                annotationPath = annotationPath.substring(filePrefix.length);
+            }
+            else {
+                console.warn(`The coverage working directory '${filePrefix}' does not exist on coverage file entry: ${annotationPath}.`);
+            }
         }
         // Base annotation object
         const annotation = {

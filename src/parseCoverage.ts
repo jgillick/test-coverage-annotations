@@ -22,7 +22,13 @@ export function parseCoverage(
     // Strip path prefix off filepath for annotation
     let annotationPath = filepath;
     if (filePrefix.length) {
-      annotationPath = annotationPath.substring(filePrefix.length);
+      if (annotationPath.startsWith(filePrefix)) {
+        annotationPath = annotationPath.substring(filePrefix.length);
+      } else {
+        console.warn(
+          `The coverage working directory '${filePrefix}' does not exist on coverage file entry: ${annotationPath}.`
+        );
+      }
     }
 
     // Base annotation object
