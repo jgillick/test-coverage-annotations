@@ -1,0 +1,316 @@
+{
+  "/test/src/file1.ts": {
+    "path": "/test/src/file2.ts",
+    "statementMap": {
+      "0": {
+        "start": {
+          "line": 1,
+          "column": 0
+        },
+        "end": {
+          "line": 1,
+          "column": 34
+        }
+      },
+      "1": {
+        "start": {
+          "line": 2,
+          "column": 0
+        },
+        "end": {
+          "line": 2,
+          "column": 30
+        }
+      }
+    },
+    "fnMap": {
+      "0": {
+        "name": "(anonymous_0)",
+        "decl": {
+          "start": {
+            "line": 3,
+            "column": 0
+          },
+          "end": {
+            "line": 3,
+            "column": 10
+          }
+        },
+        "loc": {
+          "start": {
+            "line": 3,
+            "column": 5
+          },
+          "end": {
+            "line": 4,
+            "column": 20
+          }
+        }
+      },
+      "1": {
+        "name": "(anonymous_1)",
+        "decl": {
+          "start": {
+            "line": 4,
+            "column": 2
+          },
+          "end": {
+            "line": 4,
+            "column": 8
+          }
+        },
+        "loc": {
+          "start": {
+            "line": 4,
+            "column": 22
+          },
+          "end": {
+            "line": 4,
+            "column": 3
+          }
+        }
+      }
+    },
+    "branchMap": {
+      "0": {
+        "loc": {
+          "start": {
+            "line": 5,
+            "column": 10
+          },
+          "end": {
+            "line": 5,
+            "column": 20
+          }
+        },
+        "type": "default-arg",
+        "locations": [
+          {
+            "start": {
+              "line": 5,
+              "column": 10
+            },
+            "end": {
+              "line": 4,
+              "column": 20
+            }
+          },
+          {
+            "start": {
+              "line": 5,
+              "column": 30
+            },
+            "end": {
+              "line": 5,
+              "column": 40
+            }
+          }
+        ]
+      },
+      "1": {
+        "loc": {
+          "start": {
+            "line": 6,
+            "column": 10
+          },
+          "end": {
+            "line": 6,
+            "column": 20
+          }
+        },
+        "type": "default-arg",
+        "locations": [
+          {
+            "start": {
+              "line": 6,
+              "column": 10
+            },
+            "end": {
+              "line": 6,
+              "column": 20
+            }
+          },
+          {
+            "start": {
+              "line": 6,
+              "column": 30
+            },
+            "end": {
+              "line": 6,
+              "column": 40
+            }
+          }
+        ]
+      }
+    },
+    "s": {
+      "0": 1,
+      "1": 0
+    },
+    "f": {
+      "0": 0,
+      "1": 1
+    },
+    "b": {
+      "0": [1, 1],
+      "1": [0, 1]
+    }
+  },
+  "/test/src/file2.ts": {
+    "path": "/test/src/file2.ts",
+    "statementMap": {
+      "0": {
+        "start": {
+          "line": 1,
+          "column": 0
+        },
+        "end": {
+          "line": 2,
+          "column": 34
+        }
+      },
+      "1": {
+        "start": {
+          "line": 2,
+          "column": 10
+        },
+        "end": {
+          "line": 2,
+          "column": 30
+        }
+      }
+    },
+    "fnMap": {
+      "0": {
+        "name": "(anonymous_0)",
+        "decl": {
+          "start": {
+            "line": 3,
+            "column": 0
+          },
+          "end": {
+            "line": 3,
+            "column": 13
+          }
+        },
+        "loc": {
+          "start": {
+            "line": 3,
+            "column": 0
+          },
+          "end": {
+            "line": 3,
+            "column": 1
+          }
+        }
+      },
+      "1": {
+        "name": "(anonymous_1)",
+        "decl": {
+          "start": {
+            "line": 4,
+            "column": 2
+          },
+          "end": {
+            "line": 4,
+            "column": 8
+          }
+        },
+        "loc": {
+          "start": {
+            "line": 5,
+            "column": 22
+          },
+          "end": {
+            "line": 5,
+            "column": 30
+          }
+        }
+      }
+    },
+    "branchMap": {
+      "0": {
+        "loc": {
+          "start": {
+            "line": 5,
+            "column": 10
+          },
+          "end": {
+            "line": 5,
+            "column": 20
+          }
+        },
+        "type": "default-arg",
+        "locations": [
+          {
+            "start": {
+              "line": 5,
+              "column": 10
+            },
+            "end": {
+              "line": 4,
+              "column": 20
+            }
+          },
+          {
+            "start": {
+              "line": 5,
+              "column": 30
+            },
+            "end": {
+              "line": 6,
+              "column": 40
+            }
+          }
+        ]
+      },
+      "1": {
+        "loc": {
+          "start": {
+            "line": 6,
+            "column": 10
+          },
+          "end": {
+            "line": 6,
+            "column": 20
+          }
+        },
+        "type": "default-arg",
+        "locations": [
+          {
+            "start": {
+              "line": 6,
+              "column": 10
+            },
+            "end": {
+              "line": 6,
+              "column": 20
+            }
+          },
+          {
+            "start": {
+              "line": 6,
+              "column": 30
+            },
+            "end": {
+              "line": 6,
+              "column": 40
+            }
+          }
+        ]
+      }
+    },
+    "s": {
+      "0": 0,
+      "1": 1
+    },
+    "f": {
+      "0": 1,
+      "1": 0
+    },
+    "b": {
+      "0": [1, 0],
+      "1": [1, 1]
+    }
+  }
+}

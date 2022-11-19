@@ -1,0 +1,15 @@
+name: "Test Coverage Annotations"
+description: Add file annotations to areas of code lacking test coverage
+inputs:
+  access-token:
+    description: Github access token
+    default: ${{ github.token }}
+  coverage:
+    description: Path to the test coverage JSON report.
+  only-changed-files:
+    description: "Only annotate changed files in the current PR. (default: true)"
+    default: true
+
+runs:
+  using: "node16"
+  main: "dist/index.js"
