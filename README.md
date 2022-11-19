@@ -1,6 +1,8 @@
 # Test Coverage Annotations - Github Action
 
-A github action that add file annotations to areas of code lacking test coverage. This requires the following permission:
+A github action that add test coverage annotations to your files using an (istanbul-style coverage json file)[https://github.com/gotwarlost/istanbul/blob/master/coverage.json.md] (jest compatible).
+
+This requires the following permission:
 
 - `checks: write`
 - `pull-requests: read` (if `using only-changed-files` is `true`)
@@ -13,6 +15,12 @@ A github action that add file annotations to areas of code lacking test coverage
     coverage: ./coverage/coverage-final.json
     only-changed-files: true
 ```
+
+## Input parameters
+
+- `access-token`: Your github access token. Needed to add annotations.
+- `coverage`: Path to the test coverage JSON file.
+- `only-changed-files`: Only annotate changed files in the PR.
 
 ## Full Example
 
