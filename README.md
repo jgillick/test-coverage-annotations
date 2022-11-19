@@ -19,6 +19,7 @@ This requires the following permission:
 
 - `access-token`: Your github access token. Needed to add annotations.
 - `coverage`: Path to the test coverage JSON file.
+- `coverage-working-directory`: The path of the directory that the coverage was generated in (see below)
 - `only-changed-files`: Only annotate changed files in the PR.
 
 ## Full Example
@@ -44,3 +45,10 @@ jobs:
           coverage: coverage/coverage-final.json
           only-changed-files: true
 ```
+
+## Coverage Working Directory
+
+**This is important.** The coverage JSON file will contain the _full path_ to each file in the report. This includes a path before your repository. For example: `/home/app/my_repo/file/test.ts`.
+In order to apply annotations to files correctly, we only need the path starting at the repo directory and need to strip the prefix `/home/app/my_repo/`.
+
+By default, this action will use the current working directory.

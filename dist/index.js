@@ -9540,6 +9540,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const fs_1 = __importDefault(__nccwpck_require__(7147));
+const child_process_1 = __nccwpck_require__(2081);
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const parseCoverage_1 = __nccwpck_require__(5541);
@@ -9547,10 +9548,11 @@ const parseCoverage_1 = __nccwpck_require__(5541);
  * Get the action inputs
  */
 function loadInputs() {
+    const pwd = (0, child_process_1.execSync)("pwd").toString().trim();
     return {
         accessToken: core.getInput("access-token"),
         coverageFile: core.getInput("coverage"),
-        coverageCwd: core.getInput("coverage-working-directory") || "",
+        coverageCwd: core.getInput("coverage-working-directory") || pwd,
         onlyChangedFiles: core.getInput("only-changed-files").toLowerCase() === "true",
     };
 }
@@ -9652,10 +9654,11 @@ function parseCoverage(coverage, files, filePrefix = "") {
     const annotations = [];
     for (let filename of files) {
         console.log(filename);
-        const fileCoverage = coverage[filename];
-        if (!fileCoverage) {
+        if (typeof coverage[filename] === "undefined") {
             console.warn(`No file coverage for ${filename}`);
+            continue;
         }
+        const fileCoverage = coverage[filename];
         console.log(Object.keys(fileCoverage));
         let path = filename;
         if (filePrefix.length && path.startsWith(filePrefix)) {
@@ -9713,6 +9716,14 @@ module.exports = eval("require")("encoding");
 
 "use strict";
 module.exports = require("assert");
+
+/***/ }),
+
+/***/ 2081:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("child_process");
 
 /***/ }),
 

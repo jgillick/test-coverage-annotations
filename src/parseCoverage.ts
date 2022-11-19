@@ -12,11 +12,12 @@ export function parseCoverage(
 
   for (let filename of files) {
     console.log(filename);
-    const fileCoverage = coverage[filename];
-    if (!fileCoverage) {
+    if (typeof coverage[filename] === "undefined") {
       console.warn(`No file coverage for ${filename}`);
+      continue;
     }
 
+    const fileCoverage = coverage[filename];
     console.log(Object.keys(fileCoverage));
 
     let path = filename;

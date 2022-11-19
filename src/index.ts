@@ -1,4 +1,5 @@
 import fs from "fs";
+import { execSync } from "child_process";
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 
@@ -9,10 +10,11 @@ import { parseCoverage } from "./parseCoverage";
  * Get the action inputs
  */
 function loadInputs(): Inputs {
+  const pwd = execSync("pwd").toString().trim();
   return {
     accessToken: core.getInput("access-token"),
     coverageFile: core.getInput("coverage"),
-    coverageCwd: core.getInput("coverage-working-directory") || "",
+    coverageCwd: core.getInput("coverage-working-directory") || pwd,
     onlyChangedFiles:
       core.getInput("only-changed-files").toLowerCase() === "true",
   };
