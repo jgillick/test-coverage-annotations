@@ -5,7 +5,7 @@
   "main": "dist/index.ts",
   "scripts": {
     "test": "yarn jest",
-    "build": "rm -r ./dist; yarn tsc"
+    "build": "rm -r ./dist; yarn ncc build src/index.ts -o dist"
   },
   "repository": {
     "type": "git",
@@ -32,6 +32,7 @@
     "@jest/globals": "^29.3.1",
     "@types/jest": "^29.2.3",
     "@types/node": "^18.11.9",
+    "@vercel/ncc": "^0.34.0",
     "jest": "^29.3.1",
     "prettier": "^2.7.1",
     "ts-jest": "^29.0.3",
