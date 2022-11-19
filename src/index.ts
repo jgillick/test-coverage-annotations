@@ -1,4 +1,5 @@
 import fs from "fs";
+import path from "path";
 import { execSync } from "child_process";
 import * as core from "@actions/core";
 import * as github from "@actions/github";
@@ -23,7 +24,10 @@ function loadInputs(): Inputs {
 /**
  * Get list of files changed
  */
-async function getChangedFiles(accessToken: string): Promise<string[]> {
+async function getChangedFiles(
+  accessToken: string,
+  coverageCwd: string = ""
+): Promise<string[]> {
   const client = github.getOctokit(accessToken);
 
   const repoName = github.context.repo.repo;
@@ -41,7 +45,13 @@ async function getChangedFiles(accessToken: string): Promise<string[]> {
   }
 
   // Return files with the working directory added to match local file paths
-  return results.data.map((item) => item.filename);
+  return results.data.map((item) => {
+    let filepath = item.filename;
+    if (coverageCwd.length) {
+      filepath = path.join(coverageCwd, filepath);
+    }
+    return filepath;
+  });
 }
 
 /**

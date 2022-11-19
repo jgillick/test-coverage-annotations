@@ -9540,6 +9540,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const fs_1 = __importDefault(__nccwpck_require__(7147));
+const path_1 = __importDefault(__nccwpck_require__(1017));
 const child_process_1 = __nccwpck_require__(2081);
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
@@ -9559,7 +9560,7 @@ function loadInputs() {
 /**
  * Get list of files changed
  */
-async function getChangedFiles(accessToken) {
+async function getChangedFiles(accessToken, coverageCwd = "") {
     const client = github.getOctokit(accessToken);
     const repoName = github.context.repo.repo;
     const repoOwner = github.context.repo.owner;
@@ -9573,7 +9574,13 @@ async function getChangedFiles(accessToken) {
         throw new Error("Could not get changed files.");
     }
     // Return files with the working directory added to match local file paths
-    return results.data.map((item) => item.filename);
+    return results.data.map((item) => {
+        let filepath = item.filename;
+        if (coverageCwd.length) {
+            filepath = path_1.default.join(coverageCwd, filepath);
+        }
+        return filepath;
+    });
 }
 /**
  * Read coverage file
@@ -9640,34 +9647,36 @@ main();
 /***/ }),
 
 /***/ 5541:
-/***/ ((__unused_webpack_module, exports) => {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.parseCoverage = void 0;
+const path_1 = __importDefault(__nccwpck_require__(1017));
 /**
  * Read the test coverage JSON and stream positions that are missing coverage.
  */
 function parseCoverage(coverage, files, filePrefix = "") {
     const annotations = [];
-    for (let filename of files) {
-        console.log(filename);
+    for (let filepath of files) {
         // Get coverage for file
-        if (typeof coverage[filename] === "undefined") {
-            console.warn(`No file coverage for ${filename}`);
+        if (typeof coverage[filepath] === "undefined") {
+            console.warn(`No file coverage for ${filepath}`);
             continue;
         }
-        const fileCoverage = coverage[filename];
+        const fileCoverage = coverage[filepath];
         console.log(Object.keys(fileCoverage));
-        // Strip coverage working directory off file path
-        let path = filename;
-        if (filePrefix.length && path.startsWith(filePrefix)) {
-            path = path.substring(filePrefix.length);
+        // Strip coverage working directory off filepath for annotation
+        if (filePrefix.length) {
+            filepath = path_1.default.join(filePrefix, filepath);
         }
-        // Base annotation
+        // Base annotation object
         const annotation = {
-            path,
+            path: filepath,
             annotation_level: "warning",
         };
         // Statements

@@ -1,3 +1,4 @@
+import path from "path";
 import type { Coverage, Annotation } from "./types";
 
 /**
@@ -10,25 +11,23 @@ export function parseCoverage(
 ): Annotation[] {
   const annotations = [];
 
-  for (let filename of files) {
-    console.log(filename);
+  for (let filepath of files) {
     // Get coverage for file
-    if (typeof coverage[filename] === "undefined") {
-      console.warn(`No file coverage for ${filename}`);
+    if (typeof coverage[filepath] === "undefined") {
+      console.warn(`No file coverage for ${filepath}`);
       continue;
     }
-    const fileCoverage = coverage[filename];
+    const fileCoverage = coverage[filepath];
     console.log(Object.keys(fileCoverage));
 
-    // Strip coverage working directory off file path
-    let path = filename;
-    if (filePrefix.length && path.startsWith(filePrefix)) {
-      path = path.substring(filePrefix.length);
+    // Strip coverage working directory off filepath for annotation
+    if (filePrefix.length) {
+      filepath = path.join(filePrefix, filepath);
     }
 
-    // Base annotation
+    // Base annotation object
     const annotation: Pick<Annotation, "path" | "annotation_level"> = {
-      path,
+      path: filepath,
       annotation_level: "warning",
     };
 
