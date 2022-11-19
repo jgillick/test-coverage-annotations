@@ -16,6 +16,7 @@ inputs:
 
 branding:
   icon: alert-triangle
+  color: purple
 
 runs:
   using: "node16"
