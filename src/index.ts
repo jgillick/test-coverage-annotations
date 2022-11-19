@@ -77,7 +77,7 @@ async function saveAnnotations(annotations: Annotation[], accessToken: string) {
     github.context.payload.pull_request?.head?.sha || github.context.sha;
   const total = annotations.length;
 
-  console.log("Annotations:", total);
+  console.log("Total annotations:", total);
   const output = {
     title: "Test Coverage",
     summary: `Found ${total} areas of code missing test coverage. View files for annotations`,
@@ -90,7 +90,7 @@ async function saveAnnotations(annotations: Annotation[], accessToken: string) {
 
     // Create check
     if (!checkId) {
-      console.log(`Create check run for ${sha}`);
+      console.log(`Create check run for commit: ${sha}`);
       const res = await client.rest.checks.create({
         owner: github.context.repo.owner,
         repo: github.context.repo.repo,
@@ -143,9 +143,6 @@ async function main() {
 
     // Save annotations
     await saveAnnotations(annotations, inputs.accessToken);
-
-    // Debug
-    core.setFailed("Testing");
   } catch (error) {
     core.setFailed(error as Error);
   }

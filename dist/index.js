@@ -9603,7 +9603,7 @@ async function saveAnnotations(annotations, accessToken) {
     const client = github.getOctokit(accessToken);
     const sha = ((_b = (_a = github.context.payload.pull_request) === null || _a === void 0 ? void 0 : _a.head) === null || _b === void 0 ? void 0 : _b.sha) || github.context.sha;
     const total = annotations.length;
-    console.log("Annotations:", total);
+    console.log("Total annotations:", total);
     const output = {
         title: "Test Coverage",
         summary: `Found ${total} areas of code missing test coverage. View files for annotations`,
@@ -9614,7 +9614,7 @@ async function saveAnnotations(annotations, accessToken) {
         const batch = annotations.splice(0, ANNOTATION_BATCH);
         // Create check
         if (!checkId) {
-            console.log(`Create check run for ${sha}`);
+            console.log(`Create check run for commit: ${sha}`);
             const res = await client.rest.checks.create({
                 owner: github.context.repo.owner,
                 repo: github.context.repo.repo,
@@ -9658,8 +9658,6 @@ async function main() {
         const annotations = (0, parseCoverage_1.parseCoverage)(coverage, files, inputs.coverageCwd);
         // Save annotations
         await saveAnnotations(annotations, inputs.accessToken);
-        // Debug
-        core.setFailed("Testing");
     }
     catch (error) {
         core.setFailed(error);
