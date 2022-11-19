@@ -1,11 +1,10 @@
 # Test Coverage Annotations - Github Action
 
-A github action that add test coverage annotations to your files using an [istanbul-style coverage json file](https://github.com/gotwarlost/istanbul/blob/master/coverage.json.md) (jest compatible).
+A github action that add test coverage annotations to your files using an [istanbul-style coverage JSON file](https://github.com/gotwarlost/istanbul/blob/master/coverage.json.md) (jest compatible).
 
 This requires the following permission:
 
 - `checks: write`
-- `pull-requests: read` (if `using only-changed-files` is `true`)
 
 ```yaml
 - name: Coverage annotations
@@ -31,7 +30,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
     permissions:
-      pull-requests: read
       checks: write
     steps:
       # First generate coverage
