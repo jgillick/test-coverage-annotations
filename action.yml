@@ -11,6 +11,8 @@ inputs:
     default: true
   coverage-working-directory:
     description: "The path of the directory that the coverage was generated in. i.e. In the coverage file, the prefix before the repo directory."
+  commit-sha:
+    description: "The commit sha to apply the annotations to."
 
 runs:
   using: "node16"

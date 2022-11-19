@@ -2,6 +2,7 @@ export type Inputs = {
   accessToken: string;
   coverageFile: string;
   coverageCwd: string;
+  commitSha: string;
   onlyChangedFiles: boolean;
 };
 

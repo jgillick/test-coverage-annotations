@@ -18,6 +18,7 @@ function loadInputs(): Inputs {
     accessToken: core.getInput("access-token"),
     coverageFile: core.getInput("coverage"),
     coverageCwd: core.getInput("coverage-working-directory") || pwd,
+    commitSha: core.getInput("commit-sha") || github.context.sha,
     onlyChangedFiles:
       core.getInput("only-changed-files").toLowerCase() === "true",
   };
@@ -75,6 +76,9 @@ async function saveAnnotations(annotations: Annotation[], accessToken: string) {
   const client = github.getOctokit(accessToken);
   const total = annotations.length;
 
+  console.log("Context", github.context);
+
+  console.log("Annotations:", total);
   const output = {
     title: "Test Coverage",
     summary: `Found ${total} areas of code missing test coverage. View files for annotations`,
@@ -90,7 +94,7 @@ async function saveAnnotations(annotations: Annotation[], accessToken: string) {
 
     // Create check
     if (!checkId) {
-      console.log("Create check");
+      console.log("Create check run");
       const res = await client.rest.checks.create({
         owner: github.context.repo.owner,
         repo: github.context.repo.repo,
@@ -102,26 +106,18 @@ async function saveAnnotations(annotations: Annotation[], accessToken: string) {
         },
       });
       checkId = res.data.id;
-      console.log(res.data);
     } else {
-      console.log("Update check for", checkId);
-      try {
-        const res = await client.rest.checks.update({
-          check_run_id: checkId,
-          owner: github.context.repo.owner,
-          repo: github.context.repo.repo,
-          head_sha: github.context.sha,
-          output: {
-            ...output,
-            annotations: batch,
-          },
-        });
-        console.log("Done?");
-        console.log(res);
-      } catch (error) {
-        console.error(error);
-        throw error;
-      }
+      console.log("Update check run", checkId);
+      await client.rest.checks.update({
+        check_run_id: checkId,
+        owner: github.context.repo.owner,
+        repo: github.context.repo.repo,
+        head_sha: github.context.sha,
+        output: {
+          ...output,
+          annotations: batch,
+        },
+      });
     }
   }
 }
@@ -148,7 +144,6 @@ async function main() {
 
     // Get annotations
     const annotations = parseCoverage(coverage, files, inputs.coverageCwd);
-    console.log("Annotations:", annotations.length);
 
     // Save annotations
     await saveAnnotations(annotations, inputs.accessToken);
