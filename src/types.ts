@@ -12,7 +12,7 @@ export type Annotation = {
   start_line: number;
   end_line: number;
   start_column: number;
-  end_column: number;
+  end_column?: number;
 };
 
 export type Coverage = {

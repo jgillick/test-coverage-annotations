@@ -31,7 +31,6 @@ describe("parseCoverage", () => {
         start_line: 3,
         start_column: 0,
         end_line: 4,
-        end_column: 20,
       },
       {
         path: "/test/src/file1.ts",
@@ -49,7 +48,6 @@ describe("parseCoverage", () => {
         start_line: 1,
         start_column: 0,
         end_line: 2,
-        end_column: 34,
       },
       {
         path: "/test/src/file2.ts",
@@ -58,7 +56,6 @@ describe("parseCoverage", () => {
         start_line: 4,
         start_column: 2,
         end_line: 5,
-        end_column: 30,
       },
       {
         path: "/test/src/file2.ts",
@@ -67,7 +64,6 @@ describe("parseCoverage", () => {
         start_line: 5,
         start_column: 30,
         end_line: 6,
-        end_column: 40,
       },
     ]);
   });

@@ -90,8 +90,6 @@ async function saveAnnotations(annotations: Annotation[], accessToken: string) {
         repo: github.context.repo.repo,
         head_sha: github.context.sha,
         name: "Test Coverage Annotations",
-        status: "completed",
-        conclusion: "neutral",
         output: {
           title: "Test Coverage",
           summary: `Found ${total} areas of code missing test coverage. View files for annotations`,
