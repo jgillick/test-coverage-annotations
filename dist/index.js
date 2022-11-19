@@ -9601,11 +9601,12 @@ function readCoverageFile(filepath) {
 async function saveAnnotations(annotations, accessToken) {
     const client = github.getOctokit(accessToken);
     const total = annotations.length;
-    console.log(annotations);
     // Send in batches of 50
     let checkId;
     while (annotations.length) {
         const batch = annotations.splice(0, ANNOTATION_BATCH);
+        console.log("Batch");
+        console.log(batch);
         // Create check
         if (!checkId) {
             console.log("Create check");
