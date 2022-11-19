@@ -75,6 +75,11 @@ async function saveAnnotations(annotations: Annotation[], accessToken: string) {
   const client = github.getOctokit(accessToken);
   const total = annotations.length;
 
+  const output = {
+    title: "Test Coverage",
+    summary: `Found ${total} areas of code missing test coverage. View files for annotations`,
+  };
+
   // Send in batches of 50
   let checkId;
   while (annotations.length) {
@@ -92,23 +97,31 @@ async function saveAnnotations(annotations: Annotation[], accessToken: string) {
         head_sha: github.context.sha,
         name: "Test Coverage Annotations",
         output: {
-          title: "Test Coverage",
-          summary: `Found ${total} areas of code missing test coverage. View files for annotations`,
+          ...output,
           annotations: batch,
         },
       });
       checkId = res.data.id;
+      console.log(res.data);
     } else {
-      console.log("Update check");
-      await client.rest.checks.update({
-        check_run_id: checkId,
-        owner: github.context.repo.owner,
-        repo: github.context.repo.repo,
-        head_sha: github.context.sha,
-        output: {
-          annotations: batch,
-        },
-      });
+      console.log("Update check for", checkId);
+      try {
+        const res = await client.rest.checks.update({
+          check_run_id: checkId,
+          owner: github.context.repo.owner,
+          repo: github.context.repo.repo,
+          head_sha: github.context.sha,
+          output: {
+            ...output,
+            annotations: batch,
+          },
+        });
+        console.log("Done?");
+        console.log(res);
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
     }
   }
 }
@@ -127,10 +140,10 @@ async function main() {
     let files: string[];
     if (inputs.onlyChangedFiles) {
       files = await getChangedFiles(inputs.accessToken, inputs.coverageCwd);
-      console.log("Check coverage for changed files:");
-      console.log(files);
+      console.log("Check coverage for changed files");
     } else {
       files = Object.keys(coverage);
+      console.log("Check coverage for all files");
     }
 
     // Get annotations
