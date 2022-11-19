@@ -1,6 +1,7 @@
 export type Inputs = {
   accessToken: string;
   coverageFile: string;
+  coverageCwd: string;
   onlyChangedFiles: boolean;
 };
 

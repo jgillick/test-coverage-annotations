@@ -9,6 +9,9 @@ inputs:
   only-changed-files:
     description: "Only annotate changed files in the current PR. (default: true)"
     default: true
+  coverage-working-directory:
+    description: "The path of the directory that the coverage was generated in. i.e. In the coverage file, the prefix before the repo directory."
+    default:
 
 runs:
   using: "node16"

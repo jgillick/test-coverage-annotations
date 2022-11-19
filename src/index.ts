@@ -1,6 +1,4 @@
 import fs from "fs";
-import path from "path";
-import { execSync } from "child_process";
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 
@@ -14,6 +12,7 @@ function loadInputs(): Inputs {
   return {
     accessToken: core.getInput("access-token"),
     coverageFile: core.getInput("coverage"),
+    coverageCwd: core.getInput("coverage-working-directory") || "",
     onlyChangedFiles:
       core.getInput("only-changed-files").toLowerCase() === "true",
   };
@@ -22,10 +21,7 @@ function loadInputs(): Inputs {
 /**
  * Get list of files changed
  */
-async function getChangedFiles(
-  accessToken: string,
-  pwd: string
-): Promise<string[]> {
+async function getChangedFiles(accessToken: string): Promise<string[]> {
   const client = github.getOctokit(accessToken);
 
   const repoName = github.context.repo.repo;
@@ -43,7 +39,7 @@ async function getChangedFiles(
   }
 
   // Return files with the working directory added to match local file paths
-  return results.data.map((item) => path.join(pwd, item.filename));
+  return results.data.map((item) => item.filename);
 }
 
 /**
@@ -84,18 +80,15 @@ async function saveAnnotations(annotations: Annotation[], accessToken: string) {
 async function main() {
   try {
     const inputs = loadInputs();
-    const pwd = execSync("pwd").toString().trim();
-    console.log("Current working directory", pwd);
 
     // Read coverage file
     const coverage = readCoverageFile(inputs.coverageFile);
-    console.log(`All files`);
     console.log(Object.keys(coverage));
 
     // Get files to annotate
     let files: string[];
     if (inputs.onlyChangedFiles) {
-      files = await getChangedFiles(inputs.accessToken, pwd);
+      files = await getChangedFiles(inputs.accessToken);
     } else {
       files = Object.keys(coverage);
     }
@@ -104,7 +97,7 @@ async function main() {
     console.log(files);
 
     // Get annotations
-    const annotations = parseCoverage(coverage, files, pwd);
+    const annotations = parseCoverage(coverage, files, inputs.coverageCwd);
     console.log("Annotations", annotations.length);
 
     // Save annotations

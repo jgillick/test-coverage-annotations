@@ -9540,8 +9540,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const fs_1 = __importDefault(__nccwpck_require__(7147));
-const path_1 = __importDefault(__nccwpck_require__(1017));
-const child_process_1 = __nccwpck_require__(2081);
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const parseCoverage_1 = __nccwpck_require__(5541);
@@ -9552,13 +9550,14 @@ function loadInputs() {
     return {
         accessToken: core.getInput("access-token"),
         coverageFile: core.getInput("coverage"),
+        coverageCwd: core.getInput("coverage-working-directory") || "",
         onlyChangedFiles: core.getInput("only-changed-files").toLowerCase() === "true",
     };
 }
 /**
  * Get list of files changed
  */
-async function getChangedFiles(accessToken, pwd) {
+async function getChangedFiles(accessToken) {
     const client = github.getOctokit(accessToken);
     const repoName = github.context.repo.repo;
     const repoOwner = github.context.repo.owner;
@@ -9572,7 +9571,7 @@ async function getChangedFiles(accessToken, pwd) {
         throw new Error("Could not get changed files.");
     }
     // Return files with the working directory added to match local file paths
-    return results.data.map((item) => path_1.default.join(pwd, item.filename));
+    return results.data.map((item) => item.filename);
 }
 /**
  * Read coverage file
@@ -9611,16 +9610,13 @@ async function saveAnnotations(annotations, accessToken) {
 async function main() {
     try {
         const inputs = loadInputs();
-        const pwd = (0, child_process_1.execSync)("pwd").toString().trim();
-        console.log("Current working directory", pwd);
         // Read coverage file
         const coverage = readCoverageFile(inputs.coverageFile);
-        console.log(`All files`);
         console.log(Object.keys(coverage));
         // Get files to annotate
         let files;
         if (inputs.onlyChangedFiles) {
-            files = await getChangedFiles(inputs.accessToken, pwd);
+            files = await getChangedFiles(inputs.accessToken);
         }
         else {
             files = Object.keys(coverage);
@@ -9628,7 +9624,7 @@ async function main() {
         console.log("Coverage for files");
         console.log(files);
         // Get annotations
-        const annotations = (0, parseCoverage_1.parseCoverage)(coverage, files, pwd);
+        const annotations = (0, parseCoverage_1.parseCoverage)(coverage, files, inputs.coverageCwd);
         console.log("Annotations", annotations.length);
         // Save annotations
         await saveAnnotations(annotations, inputs.accessToken);
@@ -9717,14 +9713,6 @@ module.exports = eval("require")("encoding");
 
 "use strict";
 module.exports = require("assert");
-
-/***/ }),
-
-/***/ 2081:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("child_process");
 
 /***/ }),
 
