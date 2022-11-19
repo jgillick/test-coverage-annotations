@@ -71,19 +71,42 @@ function readCoverageFile(filepath: string): Coverage {
  */
 async function saveAnnotations(annotations: Annotation[], accessToken: string) {
   const client = github.getOctokit(accessToken);
-  return client.rest.checks.create({
-    name: "Test Coverage Annotations",
-    owner: github.context.repo.owner,
-    repo: github.context.repo.repo,
-    head_sha: github.context.sha,
-    status: "completed",
-    conclusion: "neutral",
-    output: {
-      title: "Test Coverage",
-      summary: `Found ${annotations.length} areas of code missing test coverage. View files for annotations`,
-      annotations,
-    },
-  });
+  const total = annotations.length;
+
+  console.log(annotations);
+
+  // Send in batches of 50
+  let checkId;
+  while (annotations.length) {
+    const batch = annotations.splice(0, 50);
+
+    // Create check
+    if (!checkId) {
+      const res = await client.rest.checks.create({
+        owner: github.context.repo.owner,
+        repo: github.context.repo.repo,
+        head_sha: github.context.sha,
+        status: "completed",
+        conclusion: "neutral",
+        output: {
+          title: "Test Coverage",
+          summary: `Found ${total} areas of code missing test coverage. View files for annotations`,
+          annotations: batch,
+        },
+      });
+      checkId = res.data.id;
+    } else {
+      await client.rest.checks.update({
+        check_run_id: checkId,
+        owner: github.context.repo.owner,
+        repo: github.context.repo.repo,
+        head_sha: github.context.sha,
+        output: {
+          annotations: batch,
+        },
+      });
+    }
+  }
 }
 
 /**
@@ -100,12 +123,11 @@ async function main() {
     let files: string[];
     if (inputs.onlyChangedFiles) {
       files = await getChangedFiles(inputs.accessToken, inputs.coverageCwd);
+      console.log("Check coverage for changed files:");
+      console.log(files);
     } else {
       files = Object.keys(coverage);
     }
-
-    console.log("Check coverage for files:");
-    console.log(files);
 
     // Get annotations
     const annotations = parseCoverage(coverage, files, inputs.coverageCwd);

@@ -17,7 +17,6 @@ export function parseCoverage(
       continue;
     }
     const fileCoverage = coverage[filepath];
-    console.log(Object.keys(fileCoverage));
 
     // Strip path prefix off filepath for annotation
     let annotationPath = filepath;

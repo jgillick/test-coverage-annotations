@@ -9599,19 +9599,40 @@ function readCoverageFile(filepath) {
  */
 async function saveAnnotations(annotations, accessToken) {
     const client = github.getOctokit(accessToken);
-    return client.rest.checks.create({
-        name: "Test Coverage Annotations",
-        owner: github.context.repo.owner,
-        repo: github.context.repo.repo,
-        head_sha: github.context.sha,
-        status: "completed",
-        conclusion: "neutral",
-        output: {
-            title: "Test Coverage",
-            summary: `Found ${annotations.length} areas of code missing test coverage. View files for annotations`,
-            annotations,
-        },
-    });
+    const total = annotations.length;
+    console.log(annotations);
+    // Send in batches of 50
+    let checkId;
+    while (annotations.length) {
+        const batch = annotations.splice(0, 50);
+        // Create check
+        if (!checkId) {
+            const res = await client.rest.checks.create({
+                owner: github.context.repo.owner,
+                repo: github.context.repo.repo,
+                head_sha: github.context.sha,
+                status: "completed",
+                conclusion: "neutral",
+                output: {
+                    title: "Test Coverage",
+                    summary: `Found ${total} areas of code missing test coverage. View files for annotations`,
+                    annotations: batch,
+                },
+            });
+            checkId = res.data.id;
+        }
+        else {
+            await client.rest.checks.update({
+                check_run_id: checkId,
+                owner: github.context.repo.owner,
+                repo: github.context.repo.repo,
+                head_sha: github.context.sha,
+                output: {
+                    annotations: batch,
+                },
+            });
+        }
+    }
 }
 /**
  * Action entry point
@@ -9625,12 +9646,12 @@ async function main() {
         let files;
         if (inputs.onlyChangedFiles) {
             files = await getChangedFiles(inputs.accessToken, inputs.coverageCwd);
+            console.log("Check coverage for changed files:");
+            console.log(files);
         }
         else {
             files = Object.keys(coverage);
         }
-        console.log("Check coverage for files:");
-        console.log(files);
         // Get annotations
         const annotations = (0, parseCoverage_1.parseCoverage)(coverage, files, inputs.coverageCwd);
         console.log("Annotations:", annotations.length);
@@ -9667,7 +9688,6 @@ function parseCoverage(coverage, files, filePrefix = "") {
             continue;
         }
         const fileCoverage = coverage[filepath];
-        console.log(Object.keys(fileCoverage));
         // Strip path prefix off filepath for annotation
         let annotationPath = filepath;
         if (filePrefix.length) {
