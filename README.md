@@ -36,10 +36,11 @@ jobs:
       - name: Get coverage
         run: yarn jest --coverage
 
+      # Generate annotations
       - name: Coverage annotations
         uses: jgillick/test-coverage-annotations@main
         with:
           access-token: ${{ secrets.GITHUB_TOKEN }}
-          coverage: ./coverage/coverage-final.json
+          coverage: coverage/coverage-final.json
           only-changed-files: true
 ```
