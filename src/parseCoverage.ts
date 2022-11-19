@@ -47,7 +47,7 @@ export function parseCoverage(
           start_line: statement.start.line,
           start_column: statement.start.column,
           end_line: statement.end.line,
-          end_column: statement.end.column,
+          end_column: statement.end.column || 0,
         });
       }
     }
@@ -63,7 +63,7 @@ export function parseCoverage(
           start_line: func.decl.start.line,
           start_column: func.decl.start.column,
           end_line: func.loc.end.line,
-          end_column: func.loc.end.column,
+          end_column: func.loc.end.column || 0,
         });
       }
     }
@@ -81,7 +81,7 @@ export function parseCoverage(
             start_line: branch.locations[i].start.line,
             start_column: branch.locations[i].start.column,
             end_line: branch.locations[i].end.line,
-            end_column: branch.locations[i].end.column,
+            end_column: branch.locations[i].end.column || 0,
           });
         }
       }

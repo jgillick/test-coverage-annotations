@@ -9545,6 +9545,7 @@ const child_process_1 = __nccwpck_require__(2081);
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const parseCoverage_1 = __nccwpck_require__(5541);
+const ANNOTATION_BATCH = 50;
 /**
  * Get the action inputs
  */
@@ -9604,13 +9605,15 @@ async function saveAnnotations(annotations, accessToken) {
     // Send in batches of 50
     let checkId;
     while (annotations.length) {
-        const batch = annotations.splice(0, 50);
+        const batch = annotations.splice(0, ANNOTATION_BATCH);
         // Create check
         if (!checkId) {
+            console.log("Create check");
             const res = await client.rest.checks.create({
                 owner: github.context.repo.owner,
                 repo: github.context.repo.repo,
                 head_sha: github.context.sha,
+                name: "Test Coverage Annotations",
                 status: "completed",
                 conclusion: "neutral",
                 output: {
@@ -9622,6 +9625,7 @@ async function saveAnnotations(annotations, accessToken) {
             checkId = res.data.id;
         }
         else {
+            console.log("Update check");
             await client.rest.checks.update({
                 check_run_id: checkId,
                 owner: github.context.repo.owner,
@@ -9708,7 +9712,7 @@ function parseCoverage(coverage, files, filePrefix = "") {
             if (count === 0) {
                 const statement = fileCoverage.statementMap[id];
                 const message = "This statement lacks test coverage";
-                annotations.push(Object.assign(Object.assign({}, annotation), { message, start_line: statement.start.line, start_column: statement.start.column, end_line: statement.end.line, end_column: statement.end.column }));
+                annotations.push(Object.assign(Object.assign({}, annotation), { message, start_line: statement.start.line, start_column: statement.start.column, end_line: statement.end.line, end_column: statement.end.column || 0 }));
             }
         }
         // Functions
@@ -9716,7 +9720,7 @@ function parseCoverage(coverage, files, filePrefix = "") {
             if (count === 0) {
                 const func = fileCoverage.fnMap[id];
                 const message = "This function lacks test coverage";
-                annotations.push(Object.assign(Object.assign({}, annotation), { message, start_line: func.decl.start.line, start_column: func.decl.start.column, end_line: func.loc.end.line, end_column: func.loc.end.column }));
+                annotations.push(Object.assign(Object.assign({}, annotation), { message, start_line: func.decl.start.line, start_column: func.decl.start.column, end_line: func.loc.end.line, end_column: func.loc.end.column || 0 }));
             }
         }
         // Branches
@@ -9726,7 +9730,7 @@ function parseCoverage(coverage, files, filePrefix = "") {
                 if (count === 0) {
                     const branch = fileCoverage.branchMap[id];
                     const message = "This branch lacks test coverage";
-                    annotations.push(Object.assign(Object.assign({}, annotation), { message, start_line: branch.locations[i].start.line, start_column: branch.locations[i].start.column, end_line: branch.locations[i].end.line, end_column: branch.locations[i].end.column }));
+                    annotations.push(Object.assign(Object.assign({}, annotation), { message, start_line: branch.locations[i].start.line, start_column: branch.locations[i].start.column, end_line: branch.locations[i].end.line, end_column: branch.locations[i].end.column || 0 }));
                 }
             }
         }

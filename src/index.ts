@@ -7,6 +7,8 @@ import * as github from "@actions/github";
 import type { Inputs, Coverage, Annotation } from "./types";
 import { parseCoverage } from "./parseCoverage";
 
+const ANNOTATION_BATCH = 50;
+
 /**
  * Get the action inputs
  */
@@ -78,14 +80,16 @@ async function saveAnnotations(annotations: Annotation[], accessToken: string) {
   // Send in batches of 50
   let checkId;
   while (annotations.length) {
-    const batch = annotations.splice(0, 50);
+    const batch = annotations.splice(0, ANNOTATION_BATCH);
 
     // Create check
     if (!checkId) {
+      console.log("Create check");
       const res = await client.rest.checks.create({
         owner: github.context.repo.owner,
         repo: github.context.repo.repo,
         head_sha: github.context.sha,
+        name: "Test Coverage Annotations",
         status: "completed",
         conclusion: "neutral",
         output: {
@@ -96,6 +100,7 @@ async function saveAnnotations(annotations: Annotation[], accessToken: string) {
       });
       checkId = res.data.id;
     } else {
+      console.log("Update check");
       await client.rest.checks.update({
         check_run_id: checkId,
         owner: github.context.repo.owner,
