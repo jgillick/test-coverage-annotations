@@ -9602,7 +9602,7 @@ function readCoverageFile(filepath) {
 async function saveAnnotations(annotations, accessToken) {
     const client = github.getOctokit(accessToken);
     const total = annotations.length;
-    console.log("Context", github.context);
+    console.log("Context", github.context.payload.pull_request);
     console.log("Annotations:", total);
     const output = {
         title: "Test Coverage",

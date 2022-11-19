@@ -76,7 +76,7 @@ async function saveAnnotations(annotations: Annotation[], accessToken: string) {
   const client = github.getOctokit(accessToken);
   const total = annotations.length;
 
-  console.log("Context", github.context);
+  console.log("Context", github.context.payload.pull_request);
 
   console.log("Annotations:", total);
   const output = {
