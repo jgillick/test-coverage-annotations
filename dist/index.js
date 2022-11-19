@@ -9615,6 +9615,8 @@ async function main() {
         console.log("Current working directory", pwd);
         // Read coverage file
         const coverage = readCoverageFile(inputs.coverageFile);
+        console.log(`All files`);
+        console.log(Object.keys(coverage));
         // Get files to annotate
         let files;
         if (inputs.onlyChangedFiles) {
