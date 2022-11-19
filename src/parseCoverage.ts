@@ -12,19 +12,21 @@ export function parseCoverage(
 
   for (let filename of files) {
     console.log(filename);
+    // Get coverage for file
     if (typeof coverage[filename] === "undefined") {
       console.warn(`No file coverage for ${filename}`);
       continue;
     }
-
     const fileCoverage = coverage[filename];
     console.log(Object.keys(fileCoverage));
 
+    // Strip coverage working directory off file path
     let path = filename;
     if (filePrefix.length && path.startsWith(filePrefix)) {
       path = path.substring(filePrefix.length);
     }
 
+    // Base annotation
     const annotation: Pick<Annotation, "path" | "annotation_level"> = {
       path,
       annotation_level: "warning",
@@ -34,7 +36,7 @@ export function parseCoverage(
     for (const [id, count] of Object.entries(fileCoverage.s)) {
       if (count === 0) {
         const statement = fileCoverage.statementMap[id];
-        const message = "Missing test coverage for this statement";
+        const message = "This statement lacks test coverage";
         annotations.push({
           ...annotation,
           message,
@@ -50,7 +52,7 @@ export function parseCoverage(
     for (const [id, count] of Object.entries(fileCoverage.f)) {
       if (count === 0) {
         const func = fileCoverage.fnMap[id];
-        const message = "Missing test coverage for this function";
+        const message = "This function lacks test coverage";
         annotations.push({
           ...annotation,
           message,
@@ -68,7 +70,7 @@ export function parseCoverage(
         const count = counts[i];
         if (count === 0) {
           const branch = fileCoverage.branchMap[id];
-          const message = "Missing test coverage for this branch";
+          const message = "This branch lacks test coverage";
           annotations.push({
             ...annotation,
             message,

@@ -18,7 +18,7 @@ describe("parseCoverage", () => {
       {
         path: "/test/src/file1.ts",
         annotation_level: "warning",
-        message: "Missing test coverage for this statement",
+        message: "This statement lacks test coverage",
         start_line: 2,
         start_column: 0,
         end_line: 2,
@@ -27,7 +27,7 @@ describe("parseCoverage", () => {
       {
         path: "/test/src/file1.ts",
         annotation_level: "warning",
-        message: "Missing test coverage for this function",
+        message: "This function lacks test coverage",
         start_line: 3,
         start_column: 0,
         end_line: 4,
@@ -36,7 +36,7 @@ describe("parseCoverage", () => {
       {
         path: "/test/src/file1.ts",
         annotation_level: "warning",
-        message: "Missing test coverage for this branch",
+        message: "This branch lacks test coverage",
         start_line: 6,
         start_column: 10,
         end_line: 6,
@@ -45,7 +45,7 @@ describe("parseCoverage", () => {
       {
         path: "/test/src/file2.ts",
         annotation_level: "warning",
-        message: "Missing test coverage for this statement",
+        message: "This statement lacks test coverage",
         start_line: 1,
         start_column: 0,
         end_line: 2,
@@ -54,7 +54,7 @@ describe("parseCoverage", () => {
       {
         path: "/test/src/file2.ts",
         annotation_level: "warning",
-        message: "Missing test coverage for this function",
+        message: "This function lacks test coverage",
         start_line: 4,
         start_column: 2,
         end_line: 5,
@@ -63,7 +63,7 @@ describe("parseCoverage", () => {
       {
         path: "/test/src/file2.ts",
         annotation_level: "warning",
-        message: "Missing test coverage for this branch",
+        message: "This branch lacks test coverage",
         start_line: 5,
         start_column: 30,
         end_line: 6,

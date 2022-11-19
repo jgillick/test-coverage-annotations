@@ -85,7 +85,6 @@ async function main() {
 
     // Read coverage file
     const coverage = readCoverageFile(inputs.coverageFile);
-    console.log(Object.keys(coverage));
 
     // Get files to annotate
     let files: string[];
@@ -95,7 +94,7 @@ async function main() {
       files = Object.keys(coverage);
     }
 
-    console.log("Coverage for files");
+    console.log("Check coverage for files:");
     console.log(files);
 
     // Get annotations
