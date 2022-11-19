@@ -50,7 +50,12 @@ async function getChangedFiles(
  * Read coverage file
  */
 function readCoverageFile(filepath: string): Coverage {
-  return JSON.parse(fs.readFileSync(filepath).toString()) as Coverage;
+  console.log(`Reading coverage file: ${filepath}`);
+  try {
+    return JSON.parse(fs.readFileSync(filepath).toString()) as Coverage;
+  } catch (error) {
+    throw new Error(`Could not load coverage file: ${String(error)}`);
+  }
 }
 
 /**
