@@ -1,7 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.parseCoverage = void 0;
 /**
  * Read the test coverage JSON and stream positions that are missing coverage.
  */
-export function parseCoverage(coverage, files, filePrefix = "") {
+function parseCoverage(coverage, files, filePrefix = "") {
     const annotations = [];
     for (let filename of files) {
         const fileCoverage = coverage[filename];
@@ -43,4 +46,5 @@ export function parseCoverage(coverage, files, filePrefix = "") {
     }
     return annotations;
 }
+exports.parseCoverage = parseCoverage;
 //# sourceMappingURL=parseCoverage.js.map

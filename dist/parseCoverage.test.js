@@ -1,13 +1,27 @@
-import "jest";
-import fs from "fs";
-import { parseCoverage } from "./parseCoverage";
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+require("jest");
+const fs_1 = __importDefault(require("fs"));
+const parseCoverage_1 = require("./parseCoverage");
 describe("parseCoverage", () => {
     let coverage;
-    beforeEach(async () => {
-        coverage = JSON.parse(fs.readFileSync("test-coverage.json").toString());
-    });
+    beforeEach(() => __awaiter(void 0, void 0, void 0, function* () {
+        coverage = JSON.parse(fs_1.default.readFileSync("test-coverage.json").toString());
+    }));
     test("parse coverage", () => {
-        const annotations = parseCoverage(coverage, Object.keys(coverage));
+        const annotations = (0, parseCoverage_1.parseCoverage)(coverage, Object.keys(coverage));
         expect(annotations).toEqual([
             {
                 path: "/test/src/file1.ts",
@@ -66,12 +80,12 @@ describe("parseCoverage", () => {
         ]);
     });
     test("limit files annotated", () => {
-        const annotations = parseCoverage(coverage, ["/test/src/file1.ts"]);
+        const annotations = (0, parseCoverage_1.parseCoverage)(coverage, ["/test/src/file1.ts"]);
         const files = new Set(annotations.map((i) => i.path));
         expect([...files]).toEqual(["/test/src/file1.ts"]);
     });
     test("strip path prefix", () => {
-        const annotations = parseCoverage(coverage, Object.keys(coverage), "/test/src/");
+        const annotations = (0, parseCoverage_1.parseCoverage)(coverage, Object.keys(coverage), "/test/src/");
         const files = new Set(annotations.map((i) => i.path));
         expect([...files]).toEqual(["file1.ts", "file2.ts"]);
     });
