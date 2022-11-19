@@ -1,4 +1,3 @@
-import path from "path";
 import type { Coverage, Annotation } from "./types";
 
 /**
@@ -20,14 +19,15 @@ export function parseCoverage(
     const fileCoverage = coverage[filepath];
     console.log(Object.keys(fileCoverage));
 
-    // Strip coverage working directory off filepath for annotation
+    // Strip path prefix off filepath for annotation
+    let annotationPath = filepath;
     if (filePrefix.length) {
-      filepath = path.join(filePrefix, filepath);
+      annotationPath = annotationPath.substring(filePrefix.length);
     }
 
     // Base annotation object
     const annotation: Pick<Annotation, "path" | "annotation_level"> = {
-      path: filepath,
+      path: annotationPath,
       annotation_level: "warning",
     };
 

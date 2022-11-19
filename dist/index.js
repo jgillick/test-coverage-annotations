@@ -9647,16 +9647,12 @@ main();
 /***/ }),
 
 /***/ 5541:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+/***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
 
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.parseCoverage = void 0;
-const path_1 = __importDefault(__nccwpck_require__(1017));
 /**
  * Read the test coverage JSON and stream positions that are missing coverage.
  */
@@ -9670,13 +9666,14 @@ function parseCoverage(coverage, files, filePrefix = "") {
         }
         const fileCoverage = coverage[filepath];
         console.log(Object.keys(fileCoverage));
-        // Strip coverage working directory off filepath for annotation
+        // Strip path prefix off filepath for annotation
+        let annotationPath = filepath;
         if (filePrefix.length) {
-            filepath = path_1.default.join(filePrefix, filepath);
+            annotationPath = annotationPath.substring(filePrefix.length);
         }
         // Base annotation object
         const annotation = {
-            path: filepath,
+            path: annotationPath,
             annotation_level: "warning",
         };
         // Statements
