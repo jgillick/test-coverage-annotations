@@ -9566,16 +9566,13 @@ async function getChangedFiles(accessToken, coverageCwd = "") {
     const repoName = github.context.repo.repo;
     const repoOwner = github.context.repo.owner;
     const prNumber = github.context.issue.number;
-    const results = await client.rest.pulls.listFiles({
+    const results = await client.paginate("GET /repos/{owner}/{repo}/pulls/{pull_number}/files", {
         owner: repoOwner,
         repo: repoName,
         pull_number: prNumber,
     });
-    if (results.status !== 200) {
-        throw new Error("Could not get changed files.");
-    }
     // Return files with the working directory added to match local file paths
-    const files = results.data.map((item) => {
+    const files = results.map((item) => {
         let filepath = item.filename;
         if (coverageCwd.length) {
             filepath = path_1.default.join(coverageCwd, filepath);
