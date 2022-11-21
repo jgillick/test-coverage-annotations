@@ -87,6 +87,7 @@ async function saveAnnotations(annotations: Annotation[], accessToken: string) {
   let checkId;
   while (annotations.length) {
     const batch = annotations.splice(0, ANNOTATION_BATCH);
+    const status = annotations.length ? "in_progress" : "completed";
 
     // Create check
     if (!checkId) {
@@ -96,6 +97,7 @@ async function saveAnnotations(annotations: Annotation[], accessToken: string) {
         repo: github.context.repo.repo,
         head_sha: sha,
         name: "Test Coverage Annotations",
+        status,
         output: {
           ...output,
           annotations: batch,
@@ -109,6 +111,7 @@ async function saveAnnotations(annotations: Annotation[], accessToken: string) {
         owner: github.context.repo.owner,
         repo: github.context.repo.repo,
         head_sha: github.context.sha,
+        status,
         output: {
           ...output,
           annotations: batch,

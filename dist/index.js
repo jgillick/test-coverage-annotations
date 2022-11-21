@@ -9612,6 +9612,7 @@ async function saveAnnotations(annotations, accessToken) {
     let checkId;
     while (annotations.length) {
         const batch = annotations.splice(0, ANNOTATION_BATCH);
+        const status = annotations.length ? "in_progress" : "completed";
         // Create check
         if (!checkId) {
             console.log(`Create check run for commit: ${sha}`);
@@ -9620,6 +9621,7 @@ async function saveAnnotations(annotations, accessToken) {
                 repo: github.context.repo.repo,
                 head_sha: sha,
                 name: "Test Coverage Annotations",
+                status,
                 output: Object.assign(Object.assign({}, output), { annotations: batch }),
             });
             checkId = res.data.id;
@@ -9631,6 +9633,7 @@ async function saveAnnotations(annotations, accessToken) {
                 owner: github.context.repo.owner,
                 repo: github.context.repo.repo,
                 head_sha: github.context.sha,
+                status,
                 output: Object.assign(Object.assign({}, output), { annotations: batch }),
             });
         }

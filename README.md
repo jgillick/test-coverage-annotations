@@ -10,7 +10,7 @@ Requires the following permission:
 
 ```yaml
 - name: Coverage annotations
-  uses: jgillick/test-coverage-annotations@main
+  uses: jgillick/test-coverage-annotations@v1
   with:
     access-token: ${{ secrets.GITHUB_TOKEN }}
     coverage: ./coverage/coverage-final.json
@@ -41,7 +41,7 @@ jobs:
 
       # Generate annotations
       - name: Coverage annotations
-        uses: jgillick/test-coverage-annotations@main
+        uses: jgillick/test-coverage-annotations@v1
         with:
           access-token: ${{ secrets.GITHUB_TOKEN }}
           coverage: coverage/coverage-final.json
