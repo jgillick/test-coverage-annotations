@@ -53,7 +53,6 @@ async function getChangedFiles(
     }
     return filepath;
   });
-  console.log("Changed files", files);
   return files;
 }
 

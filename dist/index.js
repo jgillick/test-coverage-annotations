@@ -9579,7 +9579,6 @@ async function getChangedFiles(accessToken, coverageCwd = "") {
         }
         return filepath;
     });
-    console.log("Changed files", files);
     return files;
 }
 /**
