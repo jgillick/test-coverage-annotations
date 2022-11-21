@@ -47,13 +47,15 @@ async function getChangedFiles(
   }
 
   // Return files with the working directory added to match local file paths
-  return results.data.map((item) => {
+  const files = results.data.map((item) => {
     let filepath = item.filename;
     if (coverageCwd.length) {
       filepath = path.join(coverageCwd, filepath);
     }
     return filepath;
   });
+  console.log("Changed files", files);
+  return files;
 }
 
 /**
@@ -142,8 +144,8 @@ async function main() {
     // Get files to annotate
     let files: string[];
     if (inputs.onlyChangedFiles) {
-      files = await getChangedFiles(inputs.accessToken, inputs.coverageCwd);
       console.log("Check coverage for changed files");
+      files = await getChangedFiles(inputs.accessToken, inputs.coverageCwd);
     } else {
       files = Object.keys(coverage);
       console.log("Check coverage for all files");

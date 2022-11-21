@@ -9575,13 +9575,15 @@ async function getChangedFiles(accessToken, coverageCwd = "") {
         throw new Error("Could not get changed files.");
     }
     // Return files with the working directory added to match local file paths
-    return results.data.map((item) => {
+    const files = results.data.map((item) => {
         let filepath = item.filename;
         if (coverageCwd.length) {
             filepath = path_1.default.join(coverageCwd, filepath);
         }
         return filepath;
     });
+    console.log("Changed files", files);
+    return files;
 }
 /**
  * Read coverage file
@@ -9657,8 +9659,8 @@ async function main() {
         // Get files to annotate
         let files;
         if (inputs.onlyChangedFiles) {
-            files = await getChangedFiles(inputs.accessToken, inputs.coverageCwd);
             console.log("Check coverage for changed files");
+            files = await getChangedFiles(inputs.accessToken, inputs.coverageCwd);
         }
         else {
             files = Object.keys(coverage);
