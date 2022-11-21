@@ -9612,8 +9612,12 @@ async function saveAnnotations(annotations, accessToken) {
     let checkId;
     while (annotations.length) {
         const batch = annotations.splice(0, ANNOTATION_BATCH);
-        const status = annotations.length ? "in_progress" : "completed";
-        const conclusion = "neutral";
+        let status = "in_progress";
+        let conclusion = undefined;
+        if (annotations.length) {
+            status = "completed";
+            conclusion = "success";
+        }
         // Create check
         if (!checkId) {
             console.log(`Create check run for commit: ${sha}`);

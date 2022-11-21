@@ -87,8 +87,13 @@ async function saveAnnotations(annotations: Annotation[], accessToken: string) {
   let checkId;
   while (annotations.length) {
     const batch = annotations.splice(0, ANNOTATION_BATCH);
-    const status = annotations.length ? "in_progress" : "completed";
-    const conclusion = "neutral";
+
+    let status = "in_progress";
+    let conclusion: string | undefined = undefined;
+    if (annotations.length) {
+      status = "completed";
+      conclusion = "success";
+    }
 
     // Create check
     if (!checkId) {
