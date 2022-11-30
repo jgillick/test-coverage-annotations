@@ -15,6 +15,6 @@ jobs:
       - name: Generate user count JSON endpoint
         uses: cicirello/count-action-users@v1
         with:
-          action-list: owner/action-name
+          action-list: jgillick/test-coverage-annotations
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
