@@ -7,10 +7,11 @@ export type Inputs = {
 
 export type Annotation = {
   path: string;
+  title?: string;
   message: string;
   annotation_level: string;
   start_line: number;
-  end_line: number;
+  end_line?: number;
   start_column?: number;
   end_column?: number;
 };

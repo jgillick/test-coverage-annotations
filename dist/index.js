@@ -9507,6 +9507,71 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
+/***/ 9029:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.FileAnnotations = void 0;
+/**
+ * Collect annotations for a single file
+ */
+class FileAnnotations {
+    constructor(filepath, filePrefix) {
+        this.annotations = {};
+        // Strip path prefix off filepath for annotation
+        if (filePrefix.length) {
+            if (filepath.startsWith(filePrefix)) {
+                filepath = filepath.substring(filePrefix.length);
+            }
+            else {
+                console.warn(`The coverage working directory '${filePrefix}' does not exist on coverage file entry: ${filepath}.`);
+            }
+        }
+        this.filepath = filepath;
+    }
+    /**
+     * Get existing partial annotation for a line
+     */
+    getAnnotation(line) {
+        let annotation = this.annotations[line];
+        if (!annotation) {
+            annotation = {
+                line,
+                message: [],
+            };
+            this.annotations[line] = annotation;
+        }
+        return annotation;
+    }
+    /**
+     * Define an annotation type for a line
+     */
+    addAnnotation(type, line, column) {
+        const annotation = this.getAnnotation(line);
+        annotation.message.push(`${type} starting at column ${column}`);
+    }
+    /**
+     * Get all full annotations
+     */
+    getAnnotations() {
+        return Object.values(this.annotations).map(({ line, message }) => ({
+            title: "Line missing test coverage",
+            start_line: line,
+            end_line: line,
+            start_column: 0,
+            path: this.filepath,
+            annotation_level: "warning",
+            message: message.join("\n").trim(),
+        }));
+    }
+}
+exports.FileAnnotations = FileAnnotations;
+
+
+/***/ }),
+
 /***/ 6144:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -9677,36 +9742,18 @@ main();
 /***/ }),
 
 /***/ 5541:
-/***/ ((__unused_webpack_module, exports) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.parseCoverage = void 0;
+const FileAnnotation_1 = __nccwpck_require__(9029);
 /**
  * Read the test coverage JSON and stream positions that are missing coverage.
  */
 function parseCoverage(coverage, files, filePrefix = "") {
-    const annotations = [];
-    const addAnnotation = (annotation) => {
-        // Remove null value
-        if (annotation.end_column === null) {
-            delete annotation.end_column;
-        }
-        if (annotation.start_column === null) {
-            delete annotation.start_column;
-        }
-        // Remove column values if start/end lines are not the same
-        if (annotation.start_line !== annotation.end_line) {
-            if (typeof annotation.end_column !== "undefined") {
-                delete annotation.end_column;
-            }
-            if (typeof annotation.start_column !== "undefined") {
-                delete annotation.start_column;
-            }
-        }
-        annotations.push(annotation);
-    };
+    let annotations = [];
     for (let filepath of files) {
         // Get coverage for file
         if (typeof coverage[filepath] === "undefined") {
@@ -9715,35 +9762,19 @@ function parseCoverage(coverage, files, filePrefix = "") {
         }
         const fileCoverage = coverage[filepath];
         console.warn(`Checking coverage for ${filepath}`);
-        // Strip path prefix off filepath for annotation
-        let annotationPath = filepath;
-        if (filePrefix.length) {
-            if (annotationPath.startsWith(filePrefix)) {
-                annotationPath = annotationPath.substring(filePrefix.length);
-            }
-            else {
-                console.warn(`The coverage working directory '${filePrefix}' does not exist on coverage file entry: ${annotationPath}.`);
-            }
-        }
-        // Base annotation object
-        const base = {
-            path: annotationPath,
-            annotation_level: "warning",
-        };
+        const fileAnnotations = new FileAnnotation_1.FileAnnotations(filepath, filePrefix);
         // Statements
         for (const [id, count] of Object.entries(fileCoverage.s)) {
             if (count === 0) {
                 const statement = fileCoverage.statementMap[id];
-                const message = "This statement lacks test coverage";
-                addAnnotation(Object.assign(Object.assign({}, base), { message, start_line: statement.start.line, start_column: statement.start.column, end_line: statement.end.line, end_column: statement.end.column }));
+                fileAnnotations.addAnnotation("statement", statement.start.line, statement.start.column);
             }
         }
         // Functions
         for (const [id, count] of Object.entries(fileCoverage.f)) {
             if (count === 0) {
                 const func = fileCoverage.fnMap[id];
-                const message = "This function lacks test coverage";
-                addAnnotation(Object.assign(Object.assign({}, base), { message, start_line: func.decl.start.line, start_column: func.decl.start.column, end_line: func.loc.end.line, end_column: func.loc.end.column || 0 }));
+                fileAnnotations.addAnnotation("function", func.decl.start.line, func.decl.start.column);
             }
         }
         // Branches
@@ -9752,11 +9783,11 @@ function parseCoverage(coverage, files, filePrefix = "") {
                 const count = counts[i];
                 if (count === 0) {
                     const branch = fileCoverage.branchMap[id];
-                    const message = "This branch lacks test coverage";
-                    addAnnotation(Object.assign(Object.assign({}, base), { message, start_line: branch.locations[i].start.line, start_column: branch.locations[i].start.column, end_line: branch.locations[i].end.line, end_column: branch.locations[i].end.column || 0 }));
+                    fileAnnotations.addAnnotation("branch", branch.locations[i].start.line, branch.locations[i].start.column);
                 }
             }
         }
+        annotations = [...annotations, ...fileAnnotations.getAnnotations()];
     }
     return annotations;
 }

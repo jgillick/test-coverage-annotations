@@ -1,6 +1,6 @@
 {
   "/test/src/file1.ts": {
-    "path": "/test/src/file2.ts",
+    "path": "/test/src/file1.ts",
     "statementMap": {
       "0": {
         "start": {
@@ -19,6 +19,16 @@
         },
         "end": {
           "line": 2,
+          "column": 30
+        }
+      },
+      "2": {
+        "start": {
+          "line": 8,
+          "column": 0
+        },
+        "end": {
+          "line": 8,
           "column": 30
         }
       }
@@ -66,6 +76,29 @@
           },
           "end": {
             "line": 4,
+            "column": 3
+          }
+        }
+      },
+      "2": {
+        "name": "(anonymous_1)",
+        "decl": {
+          "start": {
+            "line": 8,
+            "column": 2
+          },
+          "end": {
+            "line": 8,
+            "column": 8
+          }
+        },
+        "loc": {
+          "start": {
+            "line": 8,
+            "column": 22
+          },
+          "end": {
+            "line": 8,
             "column": 3
           }
         }
@@ -141,19 +174,57 @@
             }
           }
         ]
+      },
+      "2": {
+        "loc": {
+          "start": {
+            "line": 8,
+            "column": 10
+          },
+          "end": {
+            "line": 8,
+            "column": 20
+          }
+        },
+        "type": "default-arg",
+        "locations": [
+          {
+            "start": {
+              "line": 8,
+              "column": 10
+            },
+            "end": {
+              "line": 8,
+              "column": 20
+            }
+          },
+          {
+            "start": {
+              "line": 8,
+              "column": 30
+            },
+            "end": {
+              "line": 8,
+              "column": 40
+            }
+          }
+        ]
       }
     },
     "s": {
       "0": 1,
-      "1": 0
+      "1": 0,
+      "2": 0
     },
     "f": {
       "0": 0,
-      "1": 1
+      "1": 1,
+      "2": 0
     },
     "b": {
       "0": [1, 1],
-      "1": [0, 1]
+      "1": [0, 1],
+      "2": [0, 0]
     }
   },
   "/test/src/file2.ts": {
