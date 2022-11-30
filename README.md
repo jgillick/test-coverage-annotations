@@ -1,6 +1,6 @@
 # Test Coverage Annotations - Github Action
 
-![Count of Action Users](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/jgillick/test-coverage-annotations/main/action-name.json)
+[![Count of Action Users](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/jgillick/test-coverage-annotations/main/action-name.json)](https://github.com/search?q=jgillick%2Ftest-coverage-annotations+path%3A.github%2Fworkflows+language%3AYAML&type=code)
 
 A github action that add test coverage annotations to your files using an [istanbul-style coverage JSON file](https://github.com/gotwarlost/istanbul/blob/master/coverage.json.md) (jest compatible).
 
