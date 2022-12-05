@@ -9677,7 +9677,7 @@ async function saveAnnotations(annotations, accessToken) {
         const batch = annotations.splice(0, ANNOTATION_BATCH);
         let status = "in_progress";
         let conclusion = undefined;
-        if (annotations.length) {
+        if (!annotations.length) {
             status = "completed";
             conclusion = "success";
         }

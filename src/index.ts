@@ -90,7 +90,7 @@ async function saveAnnotations(annotations: Annotation[], accessToken: string) {
 
     let status = "in_progress";
     let conclusion: string | undefined = undefined;
-    if (annotations.length) {
+    if (!annotations.length) {
       status = "completed";
       conclusion = "success";
     }
